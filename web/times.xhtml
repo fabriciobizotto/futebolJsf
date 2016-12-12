@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <!--<f:view locale="#{idiomaMB.locale}">-->
+    <f:view>
+        <h:head>
+            <title><h:outputText value="#{mensagem.titulo}"/></title>
+        </h:head>
+        <h:body>
+            <h:messages id="avisos" showDetail="true" showSummary="false"/>
+            <!--            <h:form id="menu" styleClass="menu">
+                            <ui:include src="menu.xhtml"/>
+                        </h:form>-->
+            <fieldset>
+                <legend>Jogadores</legend>
+                <h:form id="form1">
+                    <h:panelGrid columns="2">
+                        <h:outputLabel for="id" value="ID" rendered="#{timeBean.time.id != null}" />
+                        <h:inputText id="id" value="#{timeBean.time.id}" rendered="#{timeBean.time.id != null}" disabled="true" />
+                        <h:outputLabel for="nome" value="Nome" />
+                        <h:inputText id="nome" value="#{timeBean.time.nome}" required="true" />
+                        <h:outputLabel for="tecnico" value="Técnico" />
+                        <h:inputText id="tecnico" value="#{timeBean.time.tecnico}" required="true" />
+                        <h:outputLabel for="estadio" value="Estádio" />
+                        <h:inputText id="estadio" value="#{timeBean.time.estadio}" required="true" />
+                        <h:outputLabel for="escudo" value="Escudo" />
+                        <h:inputText id="escudo" value="#{timeBean.time.escudo}" required="true" />
+                    </h:panelGrid>
+                    <h:commandButton actionListener="#{timeBean.salvar()}"
+                                     value="${timeBean.time.id == null ? 'Cadastrar' : 'Atualizar'}">
+                        <f:ajax execute="@form :form2" render="@form :form2 :avisos" /> 
+                    </h:commandButton>
+                </h:form>
+            </fieldset>
+
+            <h:form id="form2">
+
+                <h:dataTable value="#{timeBean.times}" var="j" border="1">
+                    <f:facet name="header">
+                        <h:outputText value="Lista de Times" />
+                    </f:facet>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="ID" />
+                        </f:facet>
+                        <h:outputText value="#{j.id}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Nome" />
+                        </f:facet>
+                        <h:outputText value="#{j.nome}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Técnico" />
+                        </f:facet>
+                        <h:outputText value="#{j.tecnico}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Estádio" />
+                        </f:facet>
+                        <h:outputText value="#{j.estadio}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Escudo" />
+                        </f:facet>
+                        <h:graphicImage value="#{j.escudo}" height="48" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Ações" />
+                        </f:facet>
+                        <h:commandButton value="Alterar" action="#{timeBean.prepararAlterar()}">
+                            <f:ajax execute=":form1" render=":form1" /> 
+                            <f:setPropertyActionListener target="#{timeBean.time}" value="#{j}" />
+                        </h:commandButton>
+                        <h:commandButton value="Excluir" action="#{timeBean.excluir}">
+                            <f:ajax execute="@this" render="@form" /> 
+                            <f:setPropertyActionListener target="#{timeBean.time}" value="#{j}" />
+                        </h:commandButton>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </h:body>        
+    </f:view>
+</html>

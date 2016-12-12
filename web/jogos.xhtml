@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <!--<f:view locale="#{idiomaMB.locale}">-->
+    <f:view>
+        <h:head>
+            <title><h:outputText value="#{mensagem.titulo}"/></title>
+        </h:head>
+        <h:body>
+            <h:messages id="avisos" showDetail="true" showSummary="false"/>
+            <fieldset>
+                <legend>Jogos</legend>
+                <h:form id="form1">
+                    <h:panelGrid columns="2">
+                        <h:outputLabel for="id" value="ID" rendered="#{jogoBean.jogo.id != null}" />
+                        <h:inputText id="id" value="#{jogoBean.jogo.id}" rendered="#{jogoBean.jogo.id != null}" disabled="true" />
+                        <h:outputLabel for="data_partida" value="Data da partida" />
+                        <h:inputText id="data_partida" value="#{jogoBean.jogo.dataPartida}" required="true">
+                            <f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+                        </h:inputText>
+                        <h:outputLabel for="time_casa" value="Time da Casa" />
+                        <h:selectOneMenu label="Time da Casa" id="time_casa" value="#{jogoBean.jogo.timeCasa}" required="true">
+                            <f:selectItems value="#{jogadorBean.itensTime}"/>
+                        </h:selectOneMenu>
+                        <h:outputLabel for="time_fora" value="Adversário" />
+                        <h:selectOneMenu label="Adversário" id="time_fora" value="#{jogoBean.jogo.timeFora}" required="true">
+                            <f:selectItems value="#{jogadorBean.itensTime}"/>
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <h:commandButton actionListener="#{jogoBean.salvar()}"
+                                     value="${jogoBean.jogo.id == null ? 'Cadastrar' : 'Atualizar'}">
+                        <f:ajax execute="@form :form2" render="@form :form2 :avisos" /> 
+                    </h:commandButton>
+                </h:form>
+            </fieldset>
+
+            <h:form id="form2">
+
+                <h:dataTable value="#{jogoBean.jogos}" var="j" border="1">
+                    <f:facet name="header">
+                        <h:outputText value="Lista de Jogos" />
+                    </f:facet>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="ID" />
+                        </f:facet>
+                        <h:outputText value="#{j.id}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Data da partida" />
+                        </f:facet>
+                        <h:outputText value="#{j.dataPartida}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Time da Casa" />
+                        </f:facet>
+                        <h:graphicImage value="#{j.timeCasa.escudo}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Time de Fora" />
+                        </f:facet>
+                        <h:graphicImage value="#{j.timeFora.escudo}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Ações" />
+                        </f:facet>
+                        <h:commandButton value="Alterar" action="#{jogoBean.prepararAlterar()}">
+                            <f:ajax execute=":form1" render=":form1" /> 
+                            <f:setPropertyActionListener target="#{jogoBean.jogo}" value="#{j}" />
+                        </h:commandButton>
+                        <h:commandButton value="Excluir" action="#{jogoBean.excluir}">
+                            <f:ajax execute="@this" render="@form" /> 
+                            <f:setPropertyActionListener target="#{jogoBean.jogo}" value="#{j}" />
+                        </h:commandButton>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </h:body>        
+    </f:view>
+</html>

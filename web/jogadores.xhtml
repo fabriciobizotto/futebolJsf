@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <!--<f:view locale="#{idiomaMB.locale}">-->
+    <f:view>
+        <h:head>
+            <title><h:outputText value="#{mensagem.titulo}"/></title>
+        </h:head>
+        <h:body>
+            <h:messages id="avisos" showDetail="true" showSummary="false"/>
+            <!--            <h:form id="menu" styleClass="menu">
+                            <ui:include src="menu.xhtml"/>
+                        </h:form>-->
+            <fieldset>
+                <legend>Jogadores</legend>
+                <h:form id="form1">
+                    <h:panelGrid columns="2">
+                        <h:outputLabel for="id" value="ID" rendered="#{jogadorBean.jogador.id != null}" />
+                        <h:inputText id="id" value="#{jogadorBean.jogador.id}" rendered="#{jogadorBean.jogador.id != null}" disabled="true" />
+                        <h:outputLabel for="nome" value="Nome" />
+                        <h:inputText id="nome" value="#{jogadorBean.jogador.nome}" required="true" />
+                        <h:outputLabel for="idade" value="Idade" />
+                        <h:inputText id="idade" value="#{jogadorBean.jogador.idade}" required="true" />
+                        <h:outputLabel for="posicao" value="Posição" />
+                        <h:inputText id="posicao" value="#{jogadorBean.jogador.posicao}" required="true" />
+                        <h:outputLabel for="avatar" value="Avatar" />
+                        <h:inputText id="avatar" value="#{jogadorBean.jogador.avatar}" required="true" />
+                        <h:outputLabel for="time" value="Time" />
+                        <h:selectOneMenu label="Time" id="time" value="#{jogadorBean.jogador.time}" required="true">
+                            <f:selectItems value="#{jogadorBean.itensTime}"/>
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <h:commandButton actionListener="#{jogadorBean.salvar()}"
+                                     value="${jogadorBean.jogador.id == null ? 'Cadastrar' : 'Atualizar'}">
+                        <f:ajax execute="@form :form2" render="@form :form2 :avisos" /> 
+                    </h:commandButton>
+                </h:form>
+            </fieldset>
+
+            <h:form id="form2">
+
+                <h:dataTable value="#{jogadorBean.jogadores}" var="j" border="1">
+                    <f:facet name="header">
+                        <h:outputText value="Lista de Jogadores" />
+                    </f:facet>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="ID" />
+                        </f:facet>
+                        <h:outputText value="#{j.id}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Nome" />
+                        </f:facet>
+                        <h:outputText value="#{j.nome}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Idade" />
+                        </f:facet>
+                        <h:outputText value="#{j.idade}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Posição" />
+                        </f:facet>
+                        <h:outputText value="#{j.posicao}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Avatar" />
+                        </f:facet>
+                        <h:graphicImage value="#{j.avatar}" height="48" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Time" />
+                        </f:facet>
+                        <h:graphicImage value="#{j.time.escudo}" height="48" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Ações" />
+                        </f:facet>
+                        <h:commandButton value="Alterar" action="#{jogadorBean.prepararAlterar()}">
+                            <f:ajax execute=":form1" render=":form1" /> 
+                            <f:setPropertyActionListener target="#{jogadorBean.jogador}" value="#{j}" />
+                        </h:commandButton>
+                        <h:commandButton value="Excluir" action="#{jogadorBean.excluir}">
+                            <f:ajax execute="@this" render="@form" /> 
+                            <f:setPropertyActionListener target="#{jogadorBean.jogador}" value="#{j}" />
+                        </h:commandButton>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </h:body>        
+    </f:view>
+</html>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <!--<f:view locale="#{idiomaMB.locale}">-->
+    <f:view>
+        <h:head>
+            <title><h:outputText value="#{mensagem.titulo}"/></title>
+        </h:head>
+        <h:body>
+            <h:messages id="avisos" showDetail="true" showSummary="false"/>
+            <h:form id="form1">
+
+                <h:dataTable value="#{placarBean.placares}" var="j" border="1">
+                    <f:facet name="header">
+                        <h:outputText value="Lista de Jogos" />
+                    </f:facet>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Time da Casa" />
+                        </f:facet>
+                        <h:graphicImage value="#{j.timeCasa.escudo}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Placar da Casa" />
+                        </f:facet>
+                        <h:inputText value="#{j.placarCasa}" >
+                            <f:ajax event="blur" listener="#{placarBean.salvar(j)}" render="@this :form2" />
+                        </h:inputText>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Adversário" />
+                        </f:facet>
+                        <h:graphicImage value="#{j.timeFora.escudo}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Placar do Adversário" />
+                        </f:facet>
+                        <h:inputText value="#{j.placarFora}" >
+                            <f:ajax event="blur" listener="#{placarBean.salvar(j)}" render="@this :form2" />
+                            <f:convertNumber pattern="#0" type="number" integerOnly="true" />
+                        </h:inputText>
+                    </h:column>
+
+                    <!--                    <h:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Ações" />
+                                            </f:facet>
+                                            <h:commandButton value="Alterar" action="{placarBean.prepararAlterar()}">
+                                                <f:ajax execute=":form1" render=":form1" /> 
+                                                <f:setPropertyActionListener target="{placarBean.placar}" value="#{j}" />
+                                            </h:commandButton>
+                                            <h:commandButton value="Excluir" action="{placarBean.excluir}">
+                                                <f:ajax execute="@this" render="@form" /> 
+                                                <f:setPropertyActionListener target="{placarBean.placar}" value="#{j}" />
+                                            </h:commandButton>
+                                        </h:column>-->
+                </h:dataTable>
+                <!--                <h:commandButton actionListener="{placarBean.salvar()}" value="Salvar">
+                                    <f:ajax execute="@form" render="@form" /> 
+                                </h:commandButton>-->
+            </h:form>
+
+            <h:form id="form2">
+                <h:dataTable value="#{placarBean.situacao.entrySet().toArray()}" var="entry" border="1">
+                    <f:facet name="header">
+                        <h:outputText value="Situação" />
+                    </f:facet>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Time" />
+                        </f:facet>
+                        <h:graphicImage value="#{entry.key.escudo}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Pontuação" />
+                        </f:facet>
+                        <h:outputText value="#{entry.value}" />
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </h:body>        
+    </f:view>
+</html>
