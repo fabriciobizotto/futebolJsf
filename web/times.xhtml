@@ -5,16 +5,15 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets">
-    <!--<f:view locale="#{idiomaMB.locale}">-->
+    <!--<f:view locale="{idiomaMB.locale}">-->
     <f:view>
         <h:head>
             <title><h:outputText value="#{mensagem.titulo}"/></title>
         </h:head>
         <h:body>
+            <ui:include src="WEB-INF/includes/menu.xhtml" />
+
             <h:messages id="avisos" showDetail="true" showSummary="false"/>
-            <!--            <h:form id="menu" styleClass="menu">
-                            <ui:include src="menu.xhtml"/>
-                        </h:form>-->
             <fieldset>
                 <legend>Jogadores</legend>
                 <h:form id="form1">
@@ -81,7 +80,7 @@
                             <f:ajax execute=":form1" render=":form1" /> 
                             <f:setPropertyActionListener target="#{timeBean.time}" value="#{j}" />
                         </h:commandButton>
-                        <h:commandButton value="Excluir" action="#{timeBean.excluir}">
+                        <h:commandButton value="Excluir" action="#{timeBean.excluir}" onclick="return confirm('Tem certeza?')">
                             <f:ajax execute="@this" render="@form" /> 
                             <f:setPropertyActionListener target="#{timeBean.time}" value="#{j}" />
                         </h:commandButton>

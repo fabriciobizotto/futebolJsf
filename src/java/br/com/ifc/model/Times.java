@@ -19,6 +19,7 @@ public class Times implements Serializable {
     private String tecnico;
     private String estadio;
     private String escudo;
+    private Integer pontos;
 
     public Times() {
     }
@@ -73,6 +74,14 @@ public class Times implements Serializable {
 
     public void setEscudo(String escudo) {
         this.escudo = escudo;
+    }
+
+    public Integer getPontos() {
+        return pontos;
+    }
+
+    public void setPontos(Integer pontos) {
+        this.pontos = pontos;
     }
 
     @Override

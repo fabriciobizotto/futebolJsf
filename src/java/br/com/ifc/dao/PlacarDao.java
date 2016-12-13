@@ -7,6 +7,7 @@ package br.com.ifc.dao;
 
 import br.com.ifc.model.Placar;
 import br.com.ifc.model.PlacaresView;
+import br.com.ifc.model.Pontuacao;
 import java.util.List;
 
 /**
@@ -24,4 +25,6 @@ public interface PlacarDao {
     public PlacaresView getById(Long pk) throws Exception;
 
     public List<PlacaresView> buscarTodos() throws Exception;
+    
+    public List<Pontuacao> buscarPontuacaoCampeonato() throws Exception;
 }

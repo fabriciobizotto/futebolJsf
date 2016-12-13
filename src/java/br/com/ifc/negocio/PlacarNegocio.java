@@ -8,13 +8,8 @@ package br.com.ifc.negocio;
 import br.com.ifc.dao.PlacarDao;
 import br.com.ifc.dao.PlacarDaoImpl;
 import br.com.ifc.model.PlacaresView;
+import br.com.ifc.model.Pontuacao;
 import br.com.ifc.model.Times;
-import br.com.ifc.utils.Status;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,68 +46,71 @@ public class PlacarNegocio {
         return dao.getById(id);
     }
 
-    public Map<Times, Integer> calcularPosicaoTimes(List<PlacaresView> placares) {
-        mapa = new HashMap<>();
-        for (PlacaresView p : placares) {
-            if (p.getPlacarCasa() != null && p.getPlacarFora() != null) {
-                if (p.getPlacarCasa().compareTo(p.getPlacarFora()) > 0) {
-                    Integer pontos = mapa.get(p.getTimeCasa());
-                    pontos = pontos == null ? Status.VITORIA.getValor() : (Status.VITORIA.getValor() + pontos);
-                    mapa.put(p.getTimeCasa(), pontos);
-
-                    pontos = mapa.get(p.getTimeFora());
-                    pontos = pontos == null ? Status.DERROTA.getValor() : (Status.DERROTA.getValor() + pontos);
-                    mapa.put(p.getTimeFora(), pontos);
-                } else if (p.getPlacarCasa().compareTo(p.getPlacarFora()) == 0) {
-                    Integer pontos = mapa.get(p.getTimeCasa());
-                    pontos = pontos == null ? Status.EMPATE.getValor() : (Status.EMPATE.getValor() + pontos);
-                    mapa.put(p.getTimeCasa(), pontos);
-                    pontos = mapa.get(p.getTimeFora());
-                    pontos = pontos == null ? Status.EMPATE.getValor() : (Status.EMPATE.getValor() + pontos);
-                    mapa.put(p.getTimeFora(), pontos);
-                } else if (p.getPlacarCasa().compareTo(p.getPlacarFora()) < 0) {
-                    Integer pontos = mapa.get(p.getTimeFora());
-                    pontos = pontos == null ? Status.VITORIA.getValor() : (Status.VITORIA.getValor() + pontos);
-                    mapa.put(p.getTimeFora(), pontos);
-
-                    pontos = mapa.get(p.getTimeCasa());
-                    pontos = pontos == null ? Status.DERROTA.getValor() : (Status.DERROTA.getValor() + pontos);
-                    mapa.put(p.getTimeCasa(), pontos);
-                }
-            } else {
-                Integer pontos = mapa.get(p.getTimeFora());
-                pontos = pontos == null ? Status.VITORIA.getValor() : (Status.VITORIA.getValor() + pontos);
-                mapa.put(p.getTimeFora(), pontos);
-
-                pontos = mapa.get(p.getTimeCasa());
-                pontos = pontos == null ? Status.DERROTA.getValor() : (Status.DERROTA.getValor() + pontos);
-                mapa.put(p.getTimeCasa(), pontos);
-            }
-        }
-
-        return sortByValue(mapa);
-    }
-    
-    private void adicionarPontos(){
-        
+    public List<Pontuacao> buscarPontuacaoCampeonato() throws Exception {
+        return dao.buscarPontuacaoCampeonato();
     }
 
-    private Map<Times, Integer> sortByValue(Map<Times, Integer> unsortMap) {
-        List<Map.Entry<Times, Integer>> list = new LinkedList<>(unsortMap.entrySet());
-
-        Collections.sort(list, new Comparator<Map.Entry<Times, Integer>>() {
-            @Override
-            public int compare(Map.Entry<Times, Integer> o1,
-                    Map.Entry<Times, Integer> o2) {
-                return (o2.getValue()).compareTo(o1.getValue());
-            }
-        });
-
-        Map<Times, Integer> sortedMap = new LinkedHashMap<>();
-        for (Map.Entry<Times, Integer> entry : list) {
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-        return sortedMap;
-    }
-
+//    public Map<Times, Integer> calcularPosicaoTimes(List<PlacaresView> placares) {
+//        mapa = new HashMap<>();
+//        for (PlacaresView p : placares) {
+//            if (p.getPlacarCasa() != null && p.getPlacarFora() != null) {
+//                if (p.getPlacarCasa().compareTo(p.getPlacarFora()) > 0) {
+//                    Integer pontos = mapa.get(p.getTimeCasa());
+//                    pontos = pontos == null ? Status.VITORIA.getValor() : (Status.VITORIA.getValor() + pontos);
+//                    mapa.put(p.getTimeCasa(), pontos);
+//
+//                    pontos = mapa.get(p.getTimeFora());
+//                    pontos = pontos == null ? Status.DERROTA.getValor() : (Status.DERROTA.getValor() + pontos);
+//                    mapa.put(p.getTimeFora(), pontos);
+//                } else if (p.getPlacarCasa().compareTo(p.getPlacarFora()) == 0) {
+//                    Integer pontos = mapa.get(p.getTimeCasa());
+//                    pontos = pontos == null ? Status.EMPATE.getValor() : (Status.EMPATE.getValor() + pontos);
+//                    mapa.put(p.getTimeCasa(), pontos);
+//                    pontos = mapa.get(p.getTimeFora());
+//                    pontos = pontos == null ? Status.EMPATE.getValor() : (Status.EMPATE.getValor() + pontos);
+//                    mapa.put(p.getTimeFora(), pontos);
+//                } else if (p.getPlacarCasa().compareTo(p.getPlacarFora()) < 0) {
+//                    Integer pontos = mapa.get(p.getTimeFora());
+//                    pontos = pontos == null ? Status.VITORIA.getValor() : (Status.VITORIA.getValor() + pontos);
+//                    mapa.put(p.getTimeFora(), pontos);
+//
+//                    pontos = mapa.get(p.getTimeCasa());
+//                    pontos = pontos == null ? Status.DERROTA.getValor() : (Status.DERROTA.getValor() + pontos);
+//                    mapa.put(p.getTimeCasa(), pontos);
+//                }
+//            } else {
+//                Integer pontos = mapa.get(p.getTimeFora());
+//                pontos = pontos == null ? Status.DERROTA.getValor() : (Status.DERROTA.getValor() + pontos);
+//                mapa.put(p.getTimeFora(), pontos);
+//
+//                pontos = mapa.get(p.getTimeCasa());
+//                pontos = pontos == null ? Status.DERROTA.getValor() : (Status.DERROTA.getValor() + pontos);
+//                mapa.put(p.getTimeCasa(), pontos);
+//            }
+//        }
+//
+//        return sortByValue(mapa);
+//    }
+//
+//    private void adicionarPontos() {
+//
+//    }
+//
+//    private Map<Times, Integer> sortByValue(Map<Times, Integer> unsortMap) {
+//        List<Map.Entry<Times, Integer>> list = new LinkedList<>(unsortMap.entrySet());
+//
+//        Collections.sort(list, new Comparator<Map.Entry<Times, Integer>>() {
+//            @Override
+//            public int compare(Map.Entry<Times, Integer> o1,
+//                    Map.Entry<Times, Integer> o2) {
+//                return (o2.getValue()).compareTo(o1.getValue());
+//            }
+//        });
+//
+//        Map<Times, Integer> sortedMap = new LinkedHashMap<>();
+//        for (Map.Entry<Times, Integer> entry : list) {
+//            sortedMap.put(entry.getKey(), entry.getValue());
+//        }
+//        return sortedMap;
+//    }
 }

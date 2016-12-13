@@ -6,6 +6,7 @@
 package br.com.ifc.dao;
 
 import br.com.ifc.model.PlacaresView;
+import br.com.ifc.model.Pontuacao;
 import br.com.ifc.utils.ConnectionProvider;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -148,6 +149,73 @@ public class PlacarDaoImpl implements PlacarDao {
             return ps.executeUpdate() == 1;
         } finally {
             ConnectionProvider.getInstance().closeConnection(ps);
+        }
+    }
+
+    @Override
+    public List<Pontuacao> buscarPontuacaoCampeonato() throws Exception {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Pontuacao> lista = new ArrayList<>();
+        try {
+            String sql = "select sub.times, sum(sub.pontos) AS pontos from ( "
+                    + "select a.time_casa AS times, 3 AS pontos "
+                    + "from jogos a "
+                    + "LEFT JOIN placar b ON a.id = b.jogo_id "
+                    + "where b.placar_casa is not null and b.placar_casa is not null "
+                    + "and b.placar_casa > b.placar_fora "
+                    + "UNION ALL "
+                    + "select a.time_fora AS times, 0 AS pontos "
+                    + "from jogos a "
+                    + "LEFT JOIN placar b ON a.id = b.jogo_id "
+                    + "where b.placar_casa is not null and b.placar_casa is not null "
+                    + "and b.placar_casa > b.placar_fora "
+                    + "UNION ALL "
+                    + "select a.time_casa AS times, 1 AS pontos "
+                    + "from jogos a "
+                    + "LEFT JOIN placar b ON a.id = b.jogo_id "
+                    + "where b.placar_casa is not null and b.placar_casa is not null "
+                    + "and b.placar_casa = b.placar_fora "
+                    + "UNION ALL "
+                    + "select a.time_fora AS times, 3 AS pontos "
+                    + "from jogos a "
+                    + "LEFT JOIN placar b ON a.id = b.jogo_id "
+                    + "where b.placar_casa is not null and b.placar_casa is not null "
+                    + "and b.placar_casa < b.placar_fora "
+                    + "UNION ALL "
+                    + "select a.time_casa AS times, 0 AS pontos "
+                    + "from jogos a "
+                    + "LEFT JOIN placar b ON a.id = b.jogo_id "
+                    + "where b.placar_casa is not null and b.placar_casa is not null "
+                    + "and b.placar_casa < b.placar_fora "
+                    + "UNION ALL "
+                    + "select a.time_fora AS times, 1 AS pontos "
+                    + "from jogos a "
+                    + "LEFT JOIN placar b ON a.id = b.jogo_id "
+                    + "where b.placar_casa is not null and b.placar_casa is not null "
+                    + "and b.placar_casa = b.placar_fora "
+                    + "UNION ALL "
+                    + "select a.time_casa AS times, 0 AS pontos "
+                    + "from jogos a "
+                    + "LEFT JOIN placar b ON a.id = b.jogo_id "
+                    + "where b.placar_casa is null OR b.placar_fora is null "
+                    + "UNION ALL "
+                    + "select a.time_fora AS times, 0 AS pontos "
+                    + "from jogos a "
+                    + "LEFT JOIN placar b ON a.id = b.jogo_id "
+                    + "where b.placar_fora is null OR b.placar_casa is null "
+                    + ") sub "
+                    + "group by sub.times "
+                    + "order by SUM(sub.pontos) desc, sub.times";
+            ps = ConnectionProvider.getInstance().getConnection().prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Long time = rs.getLong("times");
+                lista.add(new Pontuacao(timeDao.getById(time), rs.getInt("pontos")));
+            }
+            return lista;
+        } finally {
+            ConnectionProvider.getInstance().closeConnection(rs, ps);
         }
     }
 

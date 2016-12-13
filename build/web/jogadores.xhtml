@@ -11,10 +11,9 @@
             <title><h:outputText value="#{mensagem.titulo}"/></title>
         </h:head>
         <h:body>
+            <ui:include src="WEB-INF/includes/menu.xhtml" />
+
             <h:messages id="avisos" showDetail="true" showSummary="false"/>
-            <!--            <h:form id="menu" styleClass="menu">
-                            <ui:include src="menu.xhtml"/>
-                        </h:form>-->
             <fieldset>
                 <legend>Jogadores</legend>
                 <h:form id="form1">
@@ -36,7 +35,11 @@
                     </h:panelGrid>
                     <h:commandButton actionListener="#{jogadorBean.salvar()}"
                                      value="${jogadorBean.jogador.id == null ? 'Cadastrar' : 'Atualizar'}">
-                        <f:ajax execute="@form :form2" render="@form :form2 :avisos" /> 
+                        <f:ajax execute="@form :form2" render="@form :form2 :avisos" />
+                    </h:commandButton>
+                    <h:commandButton actionListener="#{jogadorBean.limpar()}" value="Cancelar"
+                                     rendered="${jogadorBean.jogador.id != null}">
+                        <f:ajax execute="@form" render="@form :avisos" />
                     </h:commandButton>
                 </h:form>
             </fieldset>
@@ -91,7 +94,7 @@
                             <f:ajax execute=":form1" render=":form1" /> 
                             <f:setPropertyActionListener target="#{jogadorBean.jogador}" value="#{j}" />
                         </h:commandButton>
-                        <h:commandButton value="Excluir" action="#{jogadorBean.excluir}">
+                        <h:commandButton value="Excluir" action="#{jogadorBean.excluir}" onclick="return confirm('Tem certeza?')">
                             <f:ajax execute="@this" render="@form" /> 
                             <f:setPropertyActionListener target="#{jogadorBean.jogador}" value="#{j}" />
                         </h:commandButton>

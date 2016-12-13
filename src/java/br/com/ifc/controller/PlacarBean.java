@@ -6,15 +6,18 @@
 package br.com.ifc.controller;
 
 import br.com.ifc.model.PlacaresView;
+import br.com.ifc.model.Pontuacao;
 import br.com.ifc.model.Times;
 import br.com.ifc.negocio.PlacarNegocio;
 import br.com.ifc.negocio.TimeNegocio;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.model.DataModel;
+import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 
 /**
@@ -27,17 +30,19 @@ public class PlacarBean implements Serializable {
 
     private List<PlacaresView> placares;
     private PlacaresView placar;
-//    private PlacaresView placarAlterar;
-//    private Jogadores jogoSelecionado;
     private final PlacarNegocio negocio;
     private final TimeNegocio timeNegocio;
     private List<SelectItem> itensTime;
-    private Map<Times, Integer> situacao;
+    private DataModel<Pontuacao> pontuacaoDataModel = null;
 
     public PlacarBean() {
         placar = new PlacaresView();
         negocio = new PlacarNegocio();
         timeNegocio = new TimeNegocio();
+    }
+
+    @PostConstruct
+    public void init() {
         buscarTodos();
     }
 
@@ -63,7 +68,7 @@ public class PlacarBean implements Serializable {
     public void buscarTodos() {
         try {
             placares = negocio.buscarTodos();
-            situacao = negocio.calcularPosicaoTimes(placares);
+            pontuacaoDataModel = new ListDataModel<>(negocio.buscarPontuacaoCampeonato());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -118,12 +123,8 @@ public class PlacarBean implements Serializable {
         this.placar = placar;
     }
 
-    public Map<Times, Integer> getSituacao() {
-        return situacao;
-    }
-
-    public void setSituacao(Map<Times, Integer> situacao) {
-        this.situacao = situacao;
+    public DataModel<Pontuacao> getPontuacaoDataModel() {
+        return pontuacaoDataModel;
     }
 
 }
