@@ -72,7 +72,7 @@ public class TimeDaoImpl implements TimeDao {
         ResultSet rs = null;
         List<Times> lista = new ArrayList<>();
         try {
-            String sql = "select * from times";
+            String sql = "select * from times order by nome";
             ps = ConnectionProvider.getInstance().getConnection().prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
