@@ -25,6 +25,7 @@ import java.util.Map;
 public class PlacarNegocio {
 
     private final PlacarDao dao;
+    private Map<Times, Integer> mapa;
 
     public PlacarNegocio() {
         dao = new PlacarDaoImpl();
@@ -51,14 +52,14 @@ public class PlacarNegocio {
     }
 
     public Map<Times, Integer> calcularPosicaoTimes(List<PlacaresView> placares) {
-        Map<Times, Integer> mapa = new HashMap<>();
+        mapa = new HashMap<>();
         for (PlacaresView p : placares) {
             if (p.getPlacarCasa() != null && p.getPlacarFora() != null) {
                 if (p.getPlacarCasa().compareTo(p.getPlacarFora()) > 0) {
                     Integer pontos = mapa.get(p.getTimeCasa());
                     pontos = pontos == null ? Status.VITORIA.getValor() : (Status.VITORIA.getValor() + pontos);
                     mapa.put(p.getTimeCasa(), pontos);
-                    
+
                     pontos = mapa.get(p.getTimeFora());
                     pontos = pontos == null ? Status.DERROTA.getValor() : (Status.DERROTA.getValor() + pontos);
                     mapa.put(p.getTimeFora(), pontos);
@@ -73,44 +74,44 @@ public class PlacarNegocio {
                     Integer pontos = mapa.get(p.getTimeFora());
                     pontos = pontos == null ? Status.VITORIA.getValor() : (Status.VITORIA.getValor() + pontos);
                     mapa.put(p.getTimeFora(), pontos);
-                    
+
                     pontos = mapa.get(p.getTimeCasa());
                     pontos = pontos == null ? Status.DERROTA.getValor() : (Status.DERROTA.getValor() + pontos);
                     mapa.put(p.getTimeCasa(), pontos);
                 }
+            } else {
+                Integer pontos = mapa.get(p.getTimeFora());
+                pontos = pontos == null ? Status.VITORIA.getValor() : (Status.VITORIA.getValor() + pontos);
+                mapa.put(p.getTimeFora(), pontos);
+
+                pontos = mapa.get(p.getTimeCasa());
+                pontos = pontos == null ? Status.DERROTA.getValor() : (Status.DERROTA.getValor() + pontos);
+                mapa.put(p.getTimeCasa(), pontos);
             }
         }
 
         return sortByValue(mapa);
     }
+    
+    private void adicionarPontos(){
+        
+    }
 
     private Map<Times, Integer> sortByValue(Map<Times, Integer> unsortMap) {
+        List<Map.Entry<Times, Integer>> list = new LinkedList<>(unsortMap.entrySet());
 
-        // 1. Convert Map to List of Map
-        List<Map.Entry<Times, Integer>> list
-                = new LinkedList<Map.Entry<Times, Integer>>(unsortMap.entrySet());
-
-        // 2. Sort list with Collections.sort(), provide a custom Comparator
-        //    Try switch the o1 o2 position for a different order
         Collections.sort(list, new Comparator<Map.Entry<Times, Integer>>() {
+            @Override
             public int compare(Map.Entry<Times, Integer> o1,
                     Map.Entry<Times, Integer> o2) {
                 return (o2.getValue()).compareTo(o1.getValue());
             }
         });
 
-        // 3. Loop the sorted list and put it into a new insertion order Map LinkedHashMap
-        Map<Times, Integer> sortedMap = new LinkedHashMap<Times, Integer>();
+        Map<Times, Integer> sortedMap = new LinkedHashMap<>();
         for (Map.Entry<Times, Integer> entry : list) {
             sortedMap.put(entry.getKey(), entry.getValue());
         }
-
-        /*
-        //classic iterator example
-        for (Iterator<Map.Entry<String, Integer>> it = list.iterator(); it.hasNext(); ) {
-            Map.Entry<String, Integer> entry = it.next();
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }*/
         return sortedMap;
     }
 
